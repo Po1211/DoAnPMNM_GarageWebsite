@@ -1,0 +1,96 @@
+/* === SIGNUP FORM STYLING === */
+.form-wrapper {
+  background: #fff;
+  padding: 2rem;
+  width: 35%;  
+  max-width: 420px;
+  margin: 3rem auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.schedule-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #1a1a1a;
+}
+
+.form-wrapper .field {
+  margin-bottom: 1.2rem;
+}
+
+.form-wrapper label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-wrapper input[type="text"],
+.form-wrapper input[type="email"],
+.form-wrapper input[type="password"] {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.form-wrapper input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.hint {
+  font-size: 12px;
+  color: #999;
+  text-align: right;
+  display: block;
+  margin-top: 4px;
+}
+
+.form-wrapper ul {
+  list-style: none;
+  padding-left: 0;
+  font-size: 14px;
+  color: #444;
+}
+
+.form-wrapper ul li::before {
+  content: "✔ ";
+  color: #007bff;
+  font-weight: bold;
+}
+
+.btn-submit {
+  width: 100%;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-submit:hover {
+  background: #0056b3;
+}
+
+.form-wrapper p a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.form-wrapper p a:hover {
+  text-decoration: underline;
+}
+
+.form-wrapper p {
+  font-size: 14px;
+}

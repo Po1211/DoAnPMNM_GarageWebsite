@@ -1,0 +1,96 @@
+/* Container */
+.form-wrapper {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Title */
+.form-wrapper h2 {
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 1.5rem;
+}
+
+/* Input fields */
+.form-wrapper input[type="email"],
+.form-wrapper input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Remember + forgot */
+.form-wrapper .field {
+  margin-bottom: 1rem;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-wrapper .field label {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+
+}
+
+.form-wrapper a {
+  font-size: 14px;
+  text-decoration: none;
+  color: #555;
+}
+
+.form-wrapper a:hover {
+  text-decoration: underline;
+}
+
+/* Submit button */
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  background-color: #999;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background-color: #888;
+}
+
+/* Signup link */
+.form-wrapper .signup-link {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.signup-link a {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid #007bff;
+  color: #007bff;
+  border-radius: 5px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.signup-link a:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+input[type="checkbox"] {
+  margin-right: 8px;
+}
