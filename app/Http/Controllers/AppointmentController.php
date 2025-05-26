@@ -53,11 +53,10 @@ class AppointmentController extends Controller
       'email'    => 'required|email|max:100',
       'model'    => 'required|string|max:50',
       'km'       => 'nullable|integer',
-      'plate' => [
+      'plate'    => [
         'required',
-        'regex:/^[0-9]{2}[A-Z]-[0-9]{3,5}(\.[0-9]{2})?$/i' //29A-12345 hoac 29A-123.45
+        'regex:/^[0-9]{2}[A-Z]-[0-9]{3,5}(\.[0-9]{2})?$/i'
       ],
-
       'services' => 'required|array|min:1',
       'notes'    => 'nullable|string',
       'date'     => 'required|date',
@@ -76,13 +75,23 @@ class AppointmentController extends Controller
       ]);
     }
 
-    $vehicle = Vehicle::create([
-      'vehicle_type'     => $data['model'],
-      'vehicle_traveled' => $data['km'] ?? 0,
-      'vehicle_plate'    => $data['plate'],
-      'customer_id'      => $customer->customer_id,
-    ]);
+    $vehicle = Vehicle::where('vehicle_plate', $data['plate'])
+      ->where('customer_id', $customer->customer_id)
+      ->first();
 
+    if (!$vehicle) {
+      $vehicle = Vehicle::create([
+        'vehicle_type'     => $data['model'],
+        'vehicle_traveled' => $data['km'] ?? 0,
+        'vehicle_plate'    => $data['plate'],
+        'customer_id'      => $customer->customer_id,
+      ]);
+    } else {
+      if (!is_null($data['km'])) {
+        $vehicle->vehicle_traveled = $data['km'];
+        $vehicle->save();
+      }
+    }
 
     $appointment = $vehicle->appointments()->create([
       'booking_date'     => now(),

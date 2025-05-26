@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Garage AHK - Đăng ký</title>
+    <title>Garage AHK - Lịch sử</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -18,13 +18,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     @vite([
-    'resources/css/LienHe01.css',
+    'resources/css/DSxe.css',
     'resources/css/ThanhSidebar.css',
     'resources/css/PhanFooter.css',
-    'resources/css/SignUp.css',
     'resources/js/ThanhSidebar.js',
     'resources/js/TruyCapAnh.js',
-    'resources/js/LienHe.js',
+    'resources/js/DSxe.js',
     ])
 
 </head>
@@ -74,67 +73,61 @@
 
             <li><a href="{{ route('tintuc') }}"">Tin Tức</a></li>
   
-      <li><a href="{{ route('lienhe') }}">Liên Hệ</a></li>
+      <li><a href=" #">Liên Hệ</a></li>
         </ul>
     </div>
 
     <!-- Phần tiêu đề chính (Hero Section) -->
     <section class="hero">
         <div class="hero-content">
-            <h2>ĐĂNG KÝ</h2>
-            <p><a href="{{ route('home') }}">Trang chủ</a> / Đăng ký</p>
+            <h2>LỊCH SỬ</h2>
+            <p><a href="{{ route('home') }}">Trang chủ</a> / Lịch sử</p>
         </div>
     </section>
 
-    <!-- Đăng ký tài khoản -->
-    <section class="contact-schedule">
-        <div class="form-wrapper">
-            <h2 class="schedule-title">Đăng ký tài khoản</h2>
-
-            <form method="POST" action="{{ route('register.submit') }}">
-                @csrf
-
-                <div class="field">
-                    <label for="name">Họ và tên</label>
-                    <input type="text" id="name" name="name" maxlength="80" placeholder="Họ và tên" required>
-                    <small class="hint">0/80</small>
+    <section class="profile">
+        <div class="container">
+            <!-- Left side -->
+            <div class="card profile-card">
+                <div class="profile-header">
+                    <div class="profile-info">
+                        <strong>Xin chào,</strong>
+                        {{ $customer->name }}
+                    </div>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="logout-btn">Đăng xuất</button>
+                    </form>
                 </div>
+            </div>
 
-                <div class="field">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Email" required>
+            <!-- Right side -->
+            <div class="card service-card">
+                <h3>Danh sách xe</h3>
+                <div class="vehicle-list">
+                    @foreach ($vehicles as $vehicle)
+                    <div class="vehicle-card" data-href="{{ route('customer.vehicle.history', ['vehicle_id' => $vehicle->vehicle_id]) }}">
+                        <div class="vehicle-info">
+                            <div class="vehicle-details">
+                                <strong>{{ $vehicle->vehicle_type }}</strong>
+                                <span>Biển số xe: <strong>{{ $vehicle->vehicle_plate }}</strong></span>
+                                @if ($vehicle->latest_appointment)
+                                <span>Lịch bảo dưỡng:
+                                    <strong>{{ \Carbon\Carbon::parse($vehicle->latest_appointment->appointment_date)->format('d/m/Y • H:i') }}</strong>
+                                </span>
+                                @else
+                                <span>Chưa có lịch hẹn</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="arrow">›</div>
+                    </div>
+                    @endforeach
                 </div>
+            </div>
 
-                <div class="field">
-                    <label for="password">Mật khẩu</label>
-                    <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
-                </div>
-
-                <div class="field">
-                    <label for="password_confirmation">Nhập lại mật khẩu</label>
-                    <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Nhập lại mật khẩu mới" required>
-                </div>
-
-                <div class="field">
-                    <p><strong>Mật khẩu bao gồm:</strong></p>
-                    <ul style="padding-left: 1.25rem;">
-                        <li>✔ Ít nhất 8 ký tự</li>
-                        <li>✔ Chữ hoa & chữ thường</li>
-                        <li>✔ Ít nhất 1 số</li>
-                    </ul>
-                </div>
-
-                <div class="form-actions full-width" style="margin-top: 1rem;">
-                    <button type="submit" class="btn-submit">Đăng ký</button>
-                </div>
-
-                <p style="text-align: center; margin-top: 1rem;">
-                    Đã có tài khoản? <a href="{{ route('signin') }}">Đăng nhập</a>
-                </p>
-            </form>
         </div>
     </section>
-
 
     <!-- Phần Footer -->
     <div class="footer-section">
@@ -209,6 +202,17 @@
         <a href="https://www.facebook.com/garaphuchoan" target="_blank" class="social-icon messenger"><img data-icon="Logo Mes" alt="Messenger"></a>
         <a href="https://maps.app.goo.gl/kk4zgrAmjhvnoJTW9" target="_blank" class="social-icon maps"><img data-icon="Logo Map" alt="Google Maps"></a>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+        document.querySelectorAll('.vehicle-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const target = card.getAttribute('data-href');
+                if (target) window.location.href = target;
+            });
+        });
+    </script>
 
 </body>
 

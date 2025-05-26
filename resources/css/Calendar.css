@@ -1,0 +1,239 @@
+/* Reset section layout for the history view */
+.history {
+    padding: 40px 0;
+    background-color: #f9f9f9;
+}
+
+.history .container {
+    display: flex;
+    justify-content: center;
+    /* Center horizontally */
+    align-items: flex-start;
+    /* Align items to the top */
+    gap: 40px;
+    /* Space between left (admin) and right (calendar) */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Left: Admin Profile Card */
+.profile-card {
+    width: 280px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profile-info {
+    font-size: 16px;
+    color: #333;
+}
+
+.logout-btn,
+.back-link {
+    display: block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.logout-btn:hover,
+.back-link:hover {
+    background-color: #c82333;
+}
+
+/* Right: Calendar and Appointments */
+.service-card {
+    flex-grow: 1;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.week-calendar {
+    width: 100%;
+}
+
+.calendar-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.calendar-grid {
+    display: flex;
+    gap: 20px;
+}
+
+.day-column {
+    flex: 1;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.day-header {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.event-card {
+    background-color: #fff;
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.no-events {
+    text-align: center;
+    font-size: 13px;
+    color: #888;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    /* Make it a column layout */
+    gap: 20px;
+    /* Add space between sections */
+}
+
+.profile-card {
+    width: 100%;
+    /* Take full width */
+    max-width: 100%;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    /* Keep the name and logout on one line */
+    align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.service-card {
+    flex-grow: 1;
+    width: 100%;
+    /* Take full width */
+}
+
+.week-calendar {
+    display: flex;
+    flex-direction: column;
+    /* Calendar layout */
+}
+
+.calendar-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.calendar-title {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.calendar-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    /* Prevent wrapping */
+    justify-content: space-between;
+    width: 100%;
+    /* Ensure it fills the parent */
+    overflow-x: auto;
+    /* Optional: horizontal scrolling on small screens */
+    gap: 10px;
+    /* Space between columns */
+}
+
+.day-column {
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 10px;
+    flex: 0 0 calc((100% / 7) - 10px);
+    /* 7 equal columns minus gap */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    min-width: 120px;
+    /* Adjust as needed to prevent overflow */
+}
+
+.day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.day-name {
+    font-size: 14px;
+}
+
+.day-number {
+    font-size: 14px;
+}
+
+
+.event-card {
+    background-color: #fff;
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.no-events {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.nav-btn {
+    opacity: 1 !important;           
+    visibility: visible !important; 
+    color: rgb(0, 0, 0);               
+    display: inline-block;      
+}
+
+/* Optional: Responsive */
+@media (max-width: 768px) {
+    .history .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .service-card {
+        max-width: 100%;
+    }
+}

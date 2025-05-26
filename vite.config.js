@@ -8,6 +8,8 @@ export default defineConfig({
             input: [
                 // ✅ CSS files
                 'resources/css/BaoTri.css',
+                'resources/css/DichVu.css',
+                'resources/css/DSxe.css',
                 'resources/css/GamMay01.css',
                 'resources/css/GioiThieu01.css',
                 'resources/css/LienHe01.css',
@@ -19,7 +21,9 @@ export default defineConfig({
                 'resources/css/TrangTinTuc.css',
                 'resources/css/TrangChu02.css',
                 'resources/css/SignUp.css',          
-                'resources/css/SignIn.css',        
+                'resources/css/SignIn.css',    
+                'resources/css/Calendar.css',   
+                'resources/css/AdminDetail.css',
 
                 // ✅ JS files
                 'resources/js/CauHoiThuongGap.js',
@@ -35,6 +39,8 @@ export default defineConfig({
                 'resources/js/TinTucMain.js',
                 'resources/js/TinTucSearch.js',
                 'resources/js/LienHe.js',
+                'resources/js/DichVu.js',
+                'resources/js/DSxe.js',
             ],
             refresh: true,
         }),

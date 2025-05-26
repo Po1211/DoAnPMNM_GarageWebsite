@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Garage AHK - Đăng ký</title>
+    <title>Garage AHK - Lịch sử</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -18,13 +18,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     @vite([
-    'resources/css/LienHe01.css',
+    'resources/css/DichVu.css',
     'resources/css/ThanhSidebar.css',
     'resources/css/PhanFooter.css',
-    'resources/css/SignUp.css',
     'resources/js/ThanhSidebar.js',
     'resources/js/TruyCapAnh.js',
-    'resources/js/LienHe.js',
+    'resources/js/DichVu.js',
     ])
 
 </head>
@@ -74,64 +73,103 @@
 
             <li><a href="{{ route('tintuc') }}"">Tin Tức</a></li>
   
-      <li><a href="{{ route('lienhe') }}">Liên Hệ</a></li>
+      <li><a href=" #">Liên Hệ</a></li>
         </ul>
     </div>
 
     <!-- Phần tiêu đề chính (Hero Section) -->
     <section class="hero">
         <div class="hero-content">
-            <h2>ĐĂNG KÝ</h2>
-            <p><a href="{{ route('home') }}">Trang chủ</a> / Đăng ký</p>
+            <h2>LỊCH SỬ</h2>
+            <p><a href="{{ route('home') }}">Trang chủ</a> / Lịch sử</p>
         </div>
     </section>
 
-    <!-- Đăng ký tài khoản -->
-    <section class="contact-schedule">
-        <div class="form-wrapper">
-            <h2 class="schedule-title">Đăng ký tài khoản</h2>
+    <section class="history">
+        <div class="container">
+            <!-- Left side -->
+            <div class="card profile-card">
 
-            <form method="POST" action="{{ route('register.submit') }}">
-                @csrf
+                <div class="profile-header">
+                    <div class="profile-info">
+                        <strong>Xin chào,</strong> {{ $customer->name }}
+                    </div>
 
-                <div class="field">
-                    <label for="name">Họ và tên</label>
-                    <input type="text" id="name" name="name" maxlength="80" placeholder="Họ và tên" required>
-                    <small class="hint">0/80</small>
+                    <div class="logout-wrap">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="logout-btn">Đăng xuất</button>
+                        </form>
+                    </div>
+
+                    <div class="back-wrap">
+                        <a href="{{ route('customer.cars') }}" class="back-link">← Quay lại danh sách xe</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right side -->
+            <div class="card service-card">
+                <div class="header">
+                    <div>
+                        <h3>{{ $vehicle->vehicle_type }}</h3>
+                        <div>Biển số xe: <strong>{{ $vehicle->vehicle_plate }}</strong></div>
+                    </div>
+                    <a href="{{ route('lienhe') }}" class="book-btn">Đặt lịch dịch vụ</a>
                 </div>
 
-                <div class="field">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Email" required>
+                <div class="section-title">Lịch hẹn sắp tới</div>
+                @forelse ($upcomingAppointments as $appt)
+                <div class="schedule-card">
+                    <div class="date-box">
+                        <div>{{ \Carbon\Carbon::parse($appt->appointment_date)->format('d') }}</div>
+                        <div>{{ \Carbon\Carbon::parse($appt->appointment_date)->format('m/Y') }}</div>
+                    </div>
+                    <div class="schedule-info">
+                        <h4>{{ $appt->service_type }}</h4>
+                        <div>335 Nguyễn Khoái, Thanh Long, Hai Bà Trưng, Hà Nội</div>
+                        <div>Số km đã đi: <strong>{{ $vehicle->vehicle_traveled }}</strong></div>
+                        <div class="status">
+                            <span>🕒 {{ \Carbon\Carbon::parse($appt->appointment_date)->format('H:i') }}</span>
+                            <span class="status-green">🟢 {{ ucfirst($appt->status) }}</span>
+                            <form method="POST" action="{{ route('appointment.cancel', $appt->appointment_id) }}">
+                                @csrf
+                                <button type="submit" class="cancel-btn">Hủy Lịch</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
+                @empty
+                <p style="padding-left: 16px;">Không có lịch hẹn nào.</p>
+                @endforelse
 
-                <div class="field">
-                    <label for="password">Mật khẩu</label>
-                    <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
+                <div class="section-title">Lịch sử dịch vụ</div>
+                @forelse ($pastAppointments as $appt)
+                <div class="schedule-card">
+                    <div class="date-box">
+                        <div>{{ \Carbon\Carbon::parse($appt->appointment_date)->format('d') }}</div>
+                        <div>{{ \Carbon\Carbon::parse($appt->appointment_date)->format('m/Y') }}</div>
+                    </div>
+                    <div class="schedule-info">
+                        <h4>{{ $appt->service_type }}</h4>
+                        <div>335 Nguyễn Khoái, Thanh Long, Hai Bà Trưng, Hà Nội</div>
+                        <div>Số km đã đi: <strong>{{ $vehicle->vehicle_traveled }}</strong></div>
+                        <div class="status">
+                            <span>🕒 {{ \Carbon\Carbon::parse($appt->appointment_date)->format('H:i') }}</span>
+                            @if ($appt->status === 'completed')
+                            <span class="status-green">✔️ Hoàn thành</span>
+                            @elseif ($appt->status === 'cancelled')
+                            <span class="status-red">❌ Đã hủy</span>
+                            @else
+                            <span>{{ ucfirst($appt->status) }}</span>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-
-                <div class="field">
-                    <label for="password_confirmation">Nhập lại mật khẩu</label>
-                    <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Nhập lại mật khẩu mới" required>
-                </div>
-
-                <div class="field">
-                    <p><strong>Mật khẩu bao gồm:</strong></p>
-                    <ul style="padding-left: 1.25rem;">
-                        <li>✔ Ít nhất 8 ký tự</li>
-                        <li>✔ Chữ hoa & chữ thường</li>
-                        <li>✔ Ít nhất 1 số</li>
-                    </ul>
-                </div>
-
-                <div class="form-actions full-width" style="margin-top: 1rem;">
-                    <button type="submit" class="btn-submit">Đăng ký</button>
-                </div>
-
-                <p style="text-align: center; margin-top: 1rem;">
-                    Đã có tài khoản? <a href="{{ route('signin') }}">Đăng nhập</a>
-                </p>
-            </form>
+                @empty
+                <p style="padding-left: 16px;">Không có lịch sử dịch vụ.</p>
+                @endforelse
+            </div>
         </div>
     </section>
 
@@ -209,6 +247,8 @@
         <a href="https://www.facebook.com/garaphuchoan" target="_blank" class="social-icon messenger"><img data-icon="Logo Mes" alt="Messenger"></a>
         <a href="https://maps.app.goo.gl/kk4zgrAmjhvnoJTW9" target="_blank" class="social-icon maps"><img data-icon="Logo Map" alt="Google Maps"></a>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 </body>
 

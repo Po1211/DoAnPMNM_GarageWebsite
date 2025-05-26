@@ -1,0 +1,86 @@
+/* Layout adjustments */
+.history .container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Profile card at the top */
+.card.profile-card {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logout-wrap form {
+    display: inline-block;
+}
+
+.back-wrap {
+    margin-top: 10px;
+}
+
+/* Appointment Details Card */
+.card.service-card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card.service-card h2 {
+    margin-bottom: 15px;
+}
+
+.card.service-card .card-body p {
+    margin: 5px 0;
+    font-size: 15px;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Modal adjustments */
+.modal-content {
+    padding: 15px;
+}
+
+.modal-header {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-body label {
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.modal-body input, 
+.modal-body textarea, 
+.modal-body select {
+    margin-bottom: 10px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+}

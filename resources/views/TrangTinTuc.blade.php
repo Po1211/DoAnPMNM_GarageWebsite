@@ -49,6 +49,12 @@
     <!-- Overlay -->
     <div id="page-overlay" class="page-overlay">
         <ul class="menu-items">
+            @auth
+            <li><a href="{{ route('customer.cars') }}">{{ Auth::user()->name }}</a></li>
+            @else
+            <li><a href="{{ route('signin') }}">Đăng Nhập</a></li>
+            <li><a href="{{ route('signup') }}">Đăng Ký</a></li>
+            @endauth
             <li><a href="#" class="active">Trang Chủ</a></li>
             <li><a href="/B-GioiThieu/GioiThieu01.html">Giới Thiệu</a></li>
 

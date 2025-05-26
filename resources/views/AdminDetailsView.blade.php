@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Garage AHK - Đăng ký</title>
+    <title>Garage AHK - Lịch sử</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -18,13 +18,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     @vite([
-    'resources/css/LienHe01.css',
+    'resources/css/DichVu.css',
     'resources/css/ThanhSidebar.css',
     'resources/css/PhanFooter.css',
-    'resources/css/SignUp.css',
+    'resources/css/AdminDetail.css',
     'resources/js/ThanhSidebar.js',
     'resources/js/TruyCapAnh.js',
-    'resources/js/LienHe.js',
+    'resources/js/DichVu.js',
     ])
 
 </head>
@@ -74,64 +74,91 @@
 
             <li><a href="{{ route('tintuc') }}"">Tin Tức</a></li>
   
-      <li><a href="{{ route('lienhe') }}">Liên Hệ</a></li>
+      <li><a href=" #">Liên Hệ</a></li>
         </ul>
     </div>
 
     <!-- Phần tiêu đề chính (Hero Section) -->
     <section class="hero">
         <div class="hero-content">
-            <h2>ĐĂNG KÝ</h2>
-            <p><a href="{{ route('home') }}">Trang chủ</a> / Đăng ký</p>
+            <h2>LỊCH SỬ</h2>
+            <p><a href="{{ route('home') }}">Trang chủ</a> / Lịch sử</p>
         </div>
     </section>
 
-    <!-- Đăng ký tài khoản -->
-    <section class="contact-schedule">
-        <div class="form-wrapper">
-            <h2 class="schedule-title">Đăng ký tài khoản</h2>
+    <section class="history">
+        <div class="container">
+            <!-- Left side -->
+            <div class="card profile-card">
 
-            <form method="POST" action="{{ route('register.submit') }}">
-                @csrf
+                <div class="profile-header">
+                    <div class="logout-wrap">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="logout-btn">Đăng xuất</button>
+                        </form>
+                    </div>
+                    <a href="{{ route('admin.weekly') }}" class="btn btn-secondary mb-3">← Quay lại lịch tuần</a>
+                </div>
+            </div>
 
-                <div class="field">
-                    <label for="name">Họ và tên</label>
-                    <input type="text" id="name" name="name" maxlength="80" placeholder="Họ và tên" required>
-                    <small class="hint">0/80</small>
+            <!-- Right side -->
+            <div class="card service-card">
+                <h2>Chi tiết lịch hẹn</h2>
+                <div class="card-body">
+                    <p><strong>Dịch vụ:</strong> {{ $appointment->service_type }}</p>
+                    <p><strong>Ngày giờ:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d/m/Y H:i') }}</p>
+                    <p><strong>Trạng thái:</strong> {{ $appointment->status }}</p>
+                    <p><strong>Khách hàng:</strong> {{ $appointment->vehicle->customer->name ?? '' }}</p>
+                    <p><strong>Biển số xe:</strong> {{ $appointment->vehicle->vehicle_plate ?? '' }}</p>
+                    <p><strong>Số km đã đi:</strong> {{ $appointment->vehicle->vehicle_traveled }}</p>
+                    <p><strong>Ghi chú:</strong> {{ $appointment->notes }}</p>
                 </div>
 
-                <div class="field">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Email" required>
-                </div>
+                <!-- Update Button to open Modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal">
+                    Cập nhật lịch hẹn
+                </button>
 
-                <div class="field">
-                    <label for="password">Mật khẩu</label>
-                    <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
-                </div>
+                <!-- Update Modal -->
+                <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form method="POST" action="{{ route('admin.appointment.update', $appointment->appointment_id) }}">
+                            @csrf
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="updateModalLabel">Cập nhật lịch hẹn</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <label>Dịch vụ</label>
+                                    <input type="text" name="service_type" value="{{ $appointment->service_type }}" class="form-control" required>
 
-                <div class="field">
-                    <label for="password_confirmation">Nhập lại mật khẩu</label>
-                    <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Nhập lại mật khẩu mới" required>
-                </div>
+                                    <label>Ngày giờ</label>
+                                    <input type="datetime-local" name="appointment_date" value="{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d\TH:i') }}" class="form-control" required>
 
-                <div class="field">
-                    <p><strong>Mật khẩu bao gồm:</strong></p>
-                    <ul style="padding-left: 1.25rem;">
-                        <li>✔ Ít nhất 8 ký tự</li>
-                        <li>✔ Chữ hoa & chữ thường</li>
-                        <li>✔ Ít nhất 1 số</li>
-                    </ul>
-                </div>
+                                    <label>Trạng thái</label>
+                                    <select name="status" class="form-control">
+                                        <option value="pending" {{ $appointment->status == 'pending' ? 'selected' : '' }}>Đang xử lý</option>
+                                        <option value="completed" {{ $appointment->status == 'completed' ? 'selected' : '' }}>Đã hoàn thành</option>
+                                        <option value="canceled" {{ $appointment->status == 'canceled' ? 'selected' : '' }}>Đã hủy</option>
+                                    </select>
 
-                <div class="form-actions full-width" style="margin-top: 1rem;">
-                    <button type="submit" class="btn-submit">Đăng ký</button>
-                </div>
+                                    <label>Số km đã đi</label>
+                                    <input type="number" name="vehicle_traveled" value="{{ $appointment->vehicle->vehicle_traveled }}" class="form-control">
 
-                <p style="text-align: center; margin-top: 1rem;">
-                    Đã có tài khoản? <a href="{{ route('signin') }}">Đăng nhập</a>
-                </p>
-            </form>
+                                    <label>Ghi chú</label>
+                                    <textarea name="notes" class="form-control">{{ $appointment->notes }}</textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -209,6 +236,8 @@
         <a href="https://www.facebook.com/garaphuchoan" target="_blank" class="social-icon messenger"><img data-icon="Logo Mes" alt="Messenger"></a>
         <a href="https://maps.app.goo.gl/kk4zgrAmjhvnoJTW9" target="_blank" class="social-icon maps"><img data-icon="Logo Map" alt="Google Maps"></a>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 </body>
 

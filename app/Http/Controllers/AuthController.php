@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -14,13 +15,21 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
         if (Auth::attempt($credentials, $request->has('remember'))) {
             $request->session()->regenerate();
-            return redirect()->route('profile');
+
+            // Check user role
+            $user = Auth::user();
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.weekly');
+            }
+
+            // Regular users
+            return redirect()->route('customer.cars');
         }
 
         return back()->withErrors([
@@ -37,4 +46,3 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 }
-

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Garage AHK - Đăng ký</title>
+    <title>Garage AHK - Lịch sử</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -18,13 +18,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     @vite([
-    'resources/css/LienHe01.css',
+    'resources/css/DichVu.css',
     'resources/css/ThanhSidebar.css',
     'resources/css/PhanFooter.css',
-    'resources/css/SignUp.css',
+    'resources/css/Calendar.css',
     'resources/js/ThanhSidebar.js',
     'resources/js/TruyCapAnh.js',
-    'resources/js/LienHe.js',
+    'resources/js/DichVu.js',
     ])
 
 </head>
@@ -74,64 +74,73 @@
 
             <li><a href="{{ route('tintuc') }}"">Tin Tức</a></li>
   
-      <li><a href="{{ route('lienhe') }}">Liên Hệ</a></li>
+      <li><a href=" #">Liên Hệ</a></li>
         </ul>
     </div>
 
     <!-- Phần tiêu đề chính (Hero Section) -->
     <section class="hero">
         <div class="hero-content">
-            <h2>ĐĂNG KÝ</h2>
-            <p><a href="{{ route('home') }}">Trang chủ</a> / Đăng ký</p>
+            <h2>LỊCH SỬ</h2>
+            <p><a href="{{ route('home') }}">Trang chủ</a> / Lịch sử</p>
         </div>
     </section>
 
-    <!-- Đăng ký tài khoản -->
-    <section class="contact-schedule">
-        <div class="form-wrapper">
-            <h2 class="schedule-title">Đăng ký tài khoản</h2>
-
-            <form method="POST" action="{{ route('register.submit') }}">
-                @csrf
-
-                <div class="field">
-                    <label for="name">Họ và tên</label>
-                    <input type="text" id="name" name="name" maxlength="80" placeholder="Họ và tên" required>
-                    <small class="hint">0/80</small>
+    <section class="history">
+        <div class="container">
+            <!-- Left side: Admin Info -->
+            <div class="card profile-card">
+                <div class="profile-header">
+                    <div class="profile-info">
+                        <strong>Xin chào,</strong> {{ Auth::user()->name }}
+                    </div>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="logout-btn">Đăng xuất</button>
+                    </form>
                 </div>
+            </div>
 
-                <div class="field">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Email" required>
-                </div>
+            <!-- Right side: Calendar & Appointments -->
+            <div class="card service-card">
+                <section class="week-calendar">
+                    <div class="calendar-nav">
+                        <a href="{{ route('admin.weekly', ['date' => $startOfWeek->copy()->subWeek()->format('Y-m-d')]) }}" class="nav-btn">&laquo; Tuần trước</a>
+                        <form action="{{ route('admin.weekly') }}" method="GET" style="display:inline;">
+                            <input type="date" name="date" value="{{ $currentDate->format('Y-m-d') }}">
+                            <button type="submit" class="nav-btn">Xem tuần</button>
+                        </form>
+                        <a href="{{ route('admin.weekly', ['date' => $startOfWeek->copy()->addWeek()->format('Y-m-d')]) }}" class="nav-btn">Tuần sau &raquo;</a>
+                    </div>
 
-                <div class="field">
-                    <label for="password">Mật khẩu</label>
-                    <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
-                </div>
+                    <h2 class="calendar-title">Tuần {{ $startOfWeek->format('d/m/Y') }} – {{ $endOfWeek->format('d/m/Y') }}</h2>
 
-                <div class="field">
-                    <label for="password_confirmation">Nhập lại mật khẩu</label>
-                    <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Nhập lại mật khẩu mới" required>
-                </div>
-
-                <div class="field">
-                    <p><strong>Mật khẩu bao gồm:</strong></p>
-                    <ul style="padding-left: 1.25rem;">
-                        <li>✔ Ít nhất 8 ký tự</li>
-                        <li>✔ Chữ hoa & chữ thường</li>
-                        <li>✔ Ít nhất 1 số</li>
-                    </ul>
-                </div>
-
-                <div class="form-actions full-width" style="margin-top: 1rem;">
-                    <button type="submit" class="btn-submit">Đăng ký</button>
-                </div>
-
-                <p style="text-align: center; margin-top: 1rem;">
-                    Đã có tài khoản? <a href="{{ route('signin') }}">Đăng nhập</a>
-                </p>
-            </form>
+                    <div class="calendar-grid">
+                        @foreach($weekDates as $date)
+                        <div class="day-column {{ $date->isToday() ? 'today' : '' }}">
+                            <div class="day-header">
+                                <span class="day-name">{{ $date->format('D') }}</span>
+                                <span class="day-number">{{ $date->format('d') }}</span>
+                            </div>
+                            <div class="events">
+                                @forelse($appointmentsByDate[$date->toDateString()] ?? [] as $appointment)
+                                <div class="event-card">
+                                    <a href="{{ route('admin.appointment.show', ['id' => $appointment->appointment_id]) }}">Chi tiết</a>
+                                    <div class="event-time">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('H:i') }}</div>
+                                    <div class="event-title">{{ $appointment->service_type }}</div>
+                                    <div class="event-customer">Khách: {{ $appointment->vehicle->customer->name ?? '' }}</div>
+                                    <div class="event-plate">Biển: {{ $appointment->vehicle->vehicle_plate ?? '' }}</div>
+                                    </a>
+                                </div>
+                                @empty
+                                <div class="no-events">Không có lịch hẹn</div>
+                                @endforelse
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </section>
+            </div>
         </div>
     </section>
 
@@ -209,6 +218,8 @@
         <a href="https://www.facebook.com/garaphuchoan" target="_blank" class="social-icon messenger"><img data-icon="Logo Mes" alt="Messenger"></a>
         <a href="https://maps.app.goo.gl/kk4zgrAmjhvnoJTW9" target="_blank" class="social-icon maps"><img data-icon="Logo Map" alt="Google Maps"></a>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 </body>
 
