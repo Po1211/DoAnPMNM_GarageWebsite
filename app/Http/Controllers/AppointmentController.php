@@ -51,7 +51,7 @@ class AppointmentController extends Controller
       'name'     => ['required', 'string', 'max:100', 'regex:/^[\p{L}\s\-]+$/u'],
       'phone'    => 'required|string|max:20',
       'email'    => 'required|email|max:100',
-      'model'    => 'required|string|max:50',
+      'model'    => 'required|string|max:80',
       'km'       => 'nullable|integer',
       'plate'    => [
         'required',
@@ -61,7 +61,20 @@ class AppointmentController extends Controller
       'notes'    => 'nullable|string',
       'date'     => 'required|date',
       'time'     => 'required'
+    ], [
+      'name.required' => 'Vui lòng nhập họ và tên.',
+      'name.regex'    => 'Họ và tên không được chứa ký tự đặc biệt.',
+      'phone.required' => 'Vui lòng nhập số điện thoại.',
+      'email.required' => 'Vui lòng nhập email.',
+      'email.email' => 'Email không hợp lệ.',
+      'model.required' => 'Vui lòng nhập mẫu xe.',
+      'plate.required' => 'Vui lòng nhập biển số xe.',
+      'plate.regex' => 'Biển số xe không đúng định dạng.',
+      'services.required' => 'Vui lòng chọn ít nhất một dịch vụ.',
+      'date.required' => 'Vui lòng chọn ngày hẹn.',
+      'time.required' => 'Vui lòng chọn giờ hẹn.',
     ]);
+
 
     $customer = Customer::where('email', $data['email'])
       ->orWhere('phone', $data['phone'])

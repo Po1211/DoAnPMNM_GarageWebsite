@@ -1,86 +1,55 @@
-/* Layout adjustments */
-.history .container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 1200px;
-    margin: auto;
-    padding: 20px;
-}
-
-/* Profile card at the top */
-.card.profile-card {
+/* Admin Search Form */
+form {
     background-color: #f9f9f9;
     padding: 15px;
     border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+form input, form select, form button {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+form button {
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #2980b9;
+}
+
+/* Search Results Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.profile-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
 }
 
-.logout-wrap form {
-    display: inline-block;
+table th {
+    background-color: #3498db;
+    color: white;
 }
 
-.back-wrap {
-    margin-top: 10px;
+table tr:hover {
+    background-color: #f1f1f1;
 }
 
-/* Appointment Details Card */
-.card.service-card {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.card.service-card h2 {
-    margin-bottom: 15px;
-}
-
-.card.service-card .card-body p {
-    margin: 5px 0;
-    font-size: 15px;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 4px;
+table a {
+    color: #3498db;
     text-decoration: none;
 }
 
-.btn-secondary:hover {
-    background-color: #5a6268;
-}
-
-/* Modal adjustments */
-.modal-content {
-    padding: 15px;
-}
-
-.modal-header {
-    border-bottom: 1px solid #dee2e6;
-}
-
-.modal-body label {
-    font-weight: 600;
-    margin-top: 10px;
-}
-
-.modal-body input, 
-.modal-body textarea, 
-.modal-body select {
-    margin-bottom: 10px;
-}
-
-.modal-footer {
-    display: flex;
-    justify-content: space-between;
-    padding-top: 10px;
+table a:hover {
+    text-decoration: underline;
 }

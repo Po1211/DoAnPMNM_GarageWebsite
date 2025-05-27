@@ -109,15 +109,24 @@
             </div>
             <div class="field">
               <label for="name">Họ tên <span class="required">*</span></label>
-              <input type="text" id="name" name="name" required maxlength="80" placeholder="Nhập họ và tên">
+              <input type="text" id="name" name="name" required maxlength="80" placeholder="Nhập họ và tên" value="{{ old('name') }}">
+              @error('name')
+              <span class="error-message" style="color:red;">{{ $message }}</span>
+              @enderror
             </div>
             <div class="field">
               <label for="phone">Số điện thoại <span class="required">*</span></label>
-              <input type="tel" id="phone" name="phone" required pattern="\d{10,15}" placeholder="Tối thiểu 10 chữ số">
+              <input type="tel" id="phone" name="phone" required pattern="\d{10,15}" placeholder="Tối thiểu 10 chữ số" value="{{ old('phone') }}">
+              @error('phone')
+              <span class="error-message" style="color:red;">{{ $message }}</span>
+              @enderror
             </div>
             <div class="field">
               <label for="email">Email <span class="required">*</span></label>
-              <input type="email" id="email" name="email" required placeholder="ví dụ: vidu@gmail.com">
+              <input type="email" id="email" name="email" required placeholder="ví dụ: vidu@gmail.com" value="{{ old('email') }}">
+              @error('email')
+              <span class="error-message" style="color:red;">{{ $message }}</span>
+              @enderror
             </div>
           </div>
 
@@ -128,24 +137,24 @@
             </div>
             <div class="field">
               <label for="model">Mẫu xe <span class="required">*</span></label>
-              <select id="model" name="model" required>
-                <option value="" disabled selected hidden>Lựa chọn</option>
-                <option value="Santafe">Hyundai Santafe</option>
-                <option value="Soluto">Kia Soluto</option>
-                <option value="Vios">Toyota Vios</option>
-                <option value="CX5">Mazda CX-5</option>
-                <option value="Civic">Honda Civic</option>
-                <option value="Everest">Ford Everest</option>
-
-              </select>
+              <input type="text" id="model" name="model" required placeholder="Nhập mẫu xe" value="{{ old('model') }}">
+              @error('model')
+              <span class="error-message" style="color:red;">{{ $message }}</span>
+              @enderror
             </div>
             <div class="field">
               <label for="km">Số Km</label>
-              <input type="number" id="km" name="km" placeholder="Nhập số km trên xe">
+              <input type="number" id="km" name="km" placeholder="Nhập số km trên xe" value="{{ old('km') }}">
+              @error('km')
+              <span class="error-message" style="color:red;">{{ $message }}</span>
+              @enderror
             </div>
             <div class="field">
               <label for="plate">Biển số xe <span class="required">*</span></label>
-              <input type="text" id="plate" name="plate" required placeholder="Nhập biển số xe">
+              <input type="text" id="plate" name="plate" required placeholder="Nhập biển số xe" value="{{ old('plate') }}">
+              @error('plate')
+              <span class="error-message" style="color:red;">{{ $message }}</span>
+              @enderror
             </div>
           </div>
 
@@ -157,47 +166,53 @@
             <div class="checkbox-group">
               <div class="service-item">
                 <label>Bảo trì</label>
-                <a href="#" class="detail-link">Thêm chi tiết</a>
-                <input type="checkbox" name="services[]" value="Bảo trì" class="service-checkbox">
+                <input type="checkbox" name="services[]" value="Bảo trì" class="service-checkbox" {{ is_array(old('services')) && in_array('Bảo trì', old('services')) ? 'checked' : '' }}>
               </div>
-
               <div class="service-item">
                 <label>Gầm máy</label>
-                <a href="#" class="detail-link">Thêm chi tiết</a>
-                <input type="checkbox" name="services[]" value="Gầm máy" class="service-checkbox">
+                <input type="checkbox" name="services[]" value="Gầm máy" class="service-checkbox" {{ is_array(old('services')) && in_array('Gầm máy', old('services')) ? 'checked' : '' }}>
               </div>
-
               <div class="service-item">
                 <label>Phục hồi</label>
-                <a href="#" class="detail-link">Thêm chi tiết</a>
-                <input type="checkbox" name="services[]" value="Phục hồi" class="service-checkbox">
+                <input type="checkbox" name="services[]" value="Phục hồi" class="service-checkbox" {{ is_array(old('services')) && in_array('Phục hồi', old('services')) ? 'checked' : '' }}>
               </div>
             </div>
+            @error('services')
+            <span class="error-message" style="color:red;">{{ $message }}</span>
+            @enderror
 
             <div class="field">
               <label for="notes">Ghi chú</label>
-              <textarea id="notes" name="notes" placeholder="Ví dụ: cần kiểm tra thêm…"></textarea>
+              <textarea id="notes" name="notes" placeholder="Ví dụ: cần kiểm tra thêm…">{{ old('notes') }}</textarea>
             </div>
           </div>
 
           <!-- Section 4: Appointment Time -->
           <div class="schedule-section">
             <div class="section-header">
-              <span class="step-number">4</span>Thời gian
+              <span class="step-number">4</span> Thời gian
             </div>
             <div class="field-inline">
               <div class="field">
                 <label for="date">Ngày <span class="required">*</span></label>
-                <input type="text" id="date" name="date" required>
+                <input type="text" id="date" name="date" required value="{{ old('date') }}">
+                @error('date')
+                <span class="error-message" style="color:red;">{{ $message }}</span>
+                @enderror
               </div>
               <div class="field">
                 <label for="time">Giờ <span class="required">*</span></label>
                 <select id="time" name="time" required style="width: 120px;">
-                  <option value="" disabled selected hidden>Chọn giờ</option>
+                  <option value="" disabled {{ old('time') ? '' : 'selected' }}>Chọn giờ</option>
                   @foreach($fixedSlots as $slot)
-                  <option value="{{ $slot }}">{{ \Carbon\Carbon::createFromFormat('H:i', $slot)->format('g:i A') }}</option>
+                  <option value="{{ $slot }}" {{ old('time') == $slot ? 'selected' : '' }}>
+                    {{ \Carbon\Carbon::createFromFormat('H:i', $slot)->format('g:i A') }}
+                  </option>
                   @endforeach
                 </select>
+                @error('time')
+                <span class="error-message" style="color:red;">{{ $message }}</span>
+                @enderror
               </div>
             </div>
           </div>
@@ -209,21 +224,19 @@
         </div>
       </form>
 
-    </div>
-
-    <div id="confirmation-modal" class="custom-modal {{ session('show_modal') ? '' : 'hidden' }}">
-      <div class="custom-modal-content">
-        <h3 class="modal-title">Yêu cầu đã gửi thành công!</h3>
-        <p class="modal-text">Bạn có muốn đăng ký thành viên không?</p>
-        <div class="modal-buttons">
-          <button class="btn-cancel">Về trang chủ</button>
-          <a href="{{ route('signup') }}" class="btn-confirm">Đăng ký</a>
+      <div id="confirmation-modal" class="custom-modal {{ session('show_modal') ? '' : 'hidden' }}">
+        <div class="custom-modal-content">
+          <h3 class="modal-title">Yêu cầu đã gửi thành công!</h3>
+          <p class="modal-text">Bạn có muốn đăng ký thành viên không?</p>
+          <div class="modal-buttons">
+            <button class="btn-cancel">Về trang chủ</button>
+            <a href="{{ route('signup') }}" class="btn-confirm">Đăng ký</a>
+          </div>
         </div>
       </div>
     </div>
-
-
   </section>
+
 
 
 
@@ -317,6 +330,22 @@
       }
     });
   </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const modal = document.getElementById('confirmation-modal');
+
+      // Check if modal exists and is visible
+      if (modal) {
+        modal.addEventListener('click', function(event) {
+          if (event.target === modal) {
+            modal.classList.add('hidden'); // Hide the modal
+          }
+        });
+      }
+    });
+  </script>
+
 
   <script type="application/json" id="booking-data">
     {

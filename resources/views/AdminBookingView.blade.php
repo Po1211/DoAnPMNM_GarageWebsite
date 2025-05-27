@@ -94,6 +94,9 @@
                     <div class="profile-info">
                         <strong>Xin chào,</strong> {{ Auth::user()->name }}
                     </div>
+                    <div class="search-redirect">
+                        <a href="{{ route('admin.searchAppointments') }}" class="btn btn-primary">🔍 Tìm kiếm lịch hẹn</a>
+                    </div>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="logout-btn">Đăng xuất</button>

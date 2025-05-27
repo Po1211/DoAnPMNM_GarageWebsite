@@ -237,3 +237,20 @@
         max-width: 100%;
     }
 }
+
+.search-redirect {
+    margin-top: 10px;
+}
+
+.search-redirect .btn {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.search-redirect .btn:hover {
+    background-color: #2980b9;
+}

@@ -72,4 +72,32 @@ class AdminController extends Controller
             'user' => Auth::user(),
         ]);
     }
+
+    public function searchAppointments(Request $request)
+    {
+        $query = Appointment::query()->with(['vehicle.customer']);
+
+        if ($request->filled('customer')) {
+            $query->whereHas('vehicle.customer', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->customer . '%');
+            });
+        }
+
+        if ($request->filled('plate')) {
+            $query->whereHas('vehicle', function ($q) use ($request) {
+                $q->where('vehicle_plate', 'like', '%' . $request->plate . '%');
+            });
+        }
+
+        if ($request->filled('date')) {
+            $query->whereDate('appointment_date', $request->date);
+        }
+
+        $appointments = $query->orderBy('appointment_date', 'desc')->get();
+
+        return view('AdminSearchView', [
+            'appointments' => $appointments,
+            'user' => Auth::user(),
+        ]);
+    }
 }

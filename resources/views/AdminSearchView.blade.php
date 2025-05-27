@@ -21,104 +21,18 @@
     'resources/css/DichVu.css',
     'resources/css/ThanhSidebar.css',
     'resources/css/PhanFooter.css',
+    'resources/css/AdminDetail.css',
     'resources/js/ThanhSidebar.js',
     'resources/js/TruyCapAnh.js',
     'resources/js/DichVu.js',
     ])
 
     <style>
-        /* Modal background */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            align-items: center;
-            justify-content: center;
-            overflow: auto;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        /* Modal content box */
-        .modal-content {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            position: relative;
-        }
-
-        /* Close button */
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 24px;
-            color: #333;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .close-btn:hover {
-            color: #e74c3c;
-        }
-
-        /* Input fields styling */
-        .modal-content input[type="text"],
-        .modal-content input[type="number"],
-        .modal-content input[type="datetime-local"],
-        .modal-content select,
-        .modal-content textarea {
-            width: 100%;
-            padding: 8px 10px;
-            margin: 8px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-
-        /* Buttons styling */
-        .modal-content button {
-            margin-top: 10px;
-            padding: 10px 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .modal-content button[type="submit"] {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .modal-content button[type="button"] {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        .modal-content button:hover {
-            opacity: 0.9;
-        }
-
         .btn {
             opacity: 1 !important;
             visibility: visible !important;
             color: rgb(0, 0, 0);
             display: inline-block;
-        }
-
-        /* Responsive tweaks */
-        @media screen and (max-width: 600px) {
-            .modal-content {
-                width: 95%;
-            }
         }
     </style>
 
@@ -199,45 +113,47 @@
 
             <!-- Right side -->
             <div class="card service-card">
-                <h2>Chi tiết lịch hẹn</h2>
-                <div class="card-body">
-                    <p><strong>Dịch vụ:</strong> {{ $appointment->service_type }}</p>
-                    <p><strong>Ngày giờ:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d/m/Y H:i') }}</p>
-                    <p><strong>Trạng thái:</strong> {{ $appointment->status }}</p>
-                    <p><strong>Khách hàng:</strong> {{ $appointment->vehicle->customer->name ?? '' }}</p>
-                    <p><strong>Biển số xe:</strong> {{ $appointment->vehicle->vehicle_plate ?? '' }}</p>
-                    <p><strong>Số km đã đi:</strong> {{ $appointment->vehicle->vehicle_traveled }}</p>
-                    <p><strong>Ghi chú:</strong> {{ $appointment->notes }}</p>
-                </div>
+                <h2>Tìm kiếm lịch hẹn</h2>
 
-                <!-- Update Button -->
-                <button id="showUpdateForm">Cập nhật lịch hẹn</button>
-
-                <!-- The Modal Form -->
-                <div id="updateModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close-btn">&times;</span>
-                        <h3>Cập nhật lịch hẹn</h3>
-                        <form method="POST" action="{{ route('admin.appointment.update', $appointment->appointment_id) }}">
-                            @csrf
-                            <label>Dịch vụ</label>
-                            <input type="text" name="service_type" value="{{ $appointment->service_type }}" required>
-                            <label>Ngày giờ</label>
-                            <input type="datetime-local" name="appointment_date" value="{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d\TH:i') }}" required>
-                            <label>Trạng thái</label>
-                            <select name="status">
-                                <option value="pending" {{ $appointment->status == 'pending' ? 'selected' : '' }}>Đang xử lý</option>
-                                <option value="completed" {{ $appointment->status == 'completed' ? 'selected' : '' }}>Đã hoàn thành</option>
-                                <option value="canceled" {{ $appointment->status == 'canceled' ? 'selected' : '' }}>Đã hủy</option>
-                            </select>
-                            <label>Số km đã đi</label>
-                            <input type="number" name="vehicle_traveled" value="{{ $appointment->vehicle->vehicle_traveled }}">
-                            <label>Ghi chú</label>
-                            <textarea name="notes">{{ $appointment->notes }}</textarea>
-                            <button type="submit">Lưu thay đổi</button>
-                        </form>
+                <!-- Search Form -->
+                <form action="{{ route('admin.searchAppointments') }}" method="GET" style="margin-bottom: 20px;">
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <input type="text" name="customer" placeholder="Tên khách hàng" value="{{ request('customer') }}">
+                        <input type="text" name="plate" placeholder="Biển số xe" value="{{ request('plate') }}">
+                        <input type="date" name="date" value="{{ request('date') }}">
+                        <button type="submit" class="btn">Tìm kiếm</button>
                     </div>
-                </div>
+                </form>
+
+                <!-- Search Results -->
+                @if(isset($appointments) && $appointments->count() > 0)
+                <table border="1" cellspacing="0" cellpadding="8" style="width:100%; text-align:left;">
+                    <thead>
+                        <tr>
+                            <th>Khách hàng</th>
+                            <th>Biển số</th>
+                            <th>Dịch vụ</th>
+                            <th>Ngày hẹn</th>
+                            <th>Trạng thái</th>
+                            <th>Chi tiết</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($appointments as $appt)
+                        <tr>
+                            <td>{{ $appt->vehicle->customer->name ?? 'N/A' }}</td>
+                            <td>{{ $appt->vehicle->vehicle_plate ?? 'N/A' }}</td>
+                            <td>{{ $appt->service_type }}</td>
+                            <td>{{ \Carbon\Carbon::parse($appt->appointment_date)->format('d/m/Y H:i') }}</td>
+                            <td>{{ $appt->status }}</td>
+                            <td><a href="{{ route('admin.appointment.show', $appt->appointment_id) }}">Xem</a></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                @elseif(isset($appointments))
+                <p>Không tìm thấy kết quả phù hợp.</p>
+                @endif
             </div>
         </div>
     </section>
@@ -316,27 +232,6 @@
         <a href="https://www.facebook.com/garaphuchoan" target="_blank" class="social-icon messenger"><img data-icon="Logo Mes" alt="Messenger"></a>
         <a href="https://maps.app.goo.gl/kk4zgrAmjhvnoJTW9" target="_blank" class="social-icon maps"><img data-icon="Logo Map" alt="Google Maps"></a>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-    <script>
-        document.getElementById('showUpdateForm').addEventListener('click', function() {
-            let modal = document.getElementById('updateModal');
-            modal.style.display = "flex"; // Change 'block' to 'flex' to apply centering
-        });
-
-        document.querySelector('.close-btn').addEventListener('click', function() {
-            document.getElementById('updateModal').style.display = "none";
-        });
-
-        window.onclick = function(event) {
-            let modal = document.getElementById('updateModal');
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        };
-    </script>
-
 </body>
 
 </html>
