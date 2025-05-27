@@ -54,11 +54,16 @@
   <div id="page-overlay" class="page-overlay">
     <ul class="menu-items">
       @auth
+      @if(Auth::user()->role === 'admin')
+      <li><a href="{{ route('admin.weekly') }}">{{ Auth::user()->name }} (Admin)</a></li>
+      @else
       <li><a href="{{ route('customer.cars') }}">{{ Auth::user()->name }}</a></li>
+      @endif
       @else
       <li><a href="{{ route('signin') }}">Đăng Nhập</a></li>
       <li><a href="{{ route('signup') }}">Đăng Ký</a></li>
       @endauth
+
       <li><a href="{{ route('home') }}" class="active">Trang Chủ</a></li>
       <li><a href="{{ route('gioithieu') }}">Giới Thiệu</a></li>
 

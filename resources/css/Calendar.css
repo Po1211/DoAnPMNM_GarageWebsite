@@ -226,7 +226,11 @@
     display: inline-block;      
 }
 
-/* Optional: Responsive */
+.nav-btn:hover {
+  color: inherit;
+  text-decoration: none; 
+}
+
 @media (max-width: 768px) {
     .history .container {
         flex-direction: column;

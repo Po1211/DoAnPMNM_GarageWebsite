@@ -128,7 +128,7 @@
                             <div class="events">
                                 @forelse($appointmentsByDate[$date->toDateString()] ?? [] as $appointment)
                                 <div class="event-card">
-                                    <a href="{{ route('admin.appointment.show', ['id' => $appointment->appointment_id]) }}">Chi tiết</a>
+                                    <a href="{{ route('admin.appointment.show', ['id' => $appointment->appointment_id]) }}" class="nav-btn">
                                     <div class="event-time">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('H:i') }}</div>
                                     <div class="event-title">{{ $appointment->service_type }}</div>
                                     <div class="event-customer">Khách: {{ $appointment->vehicle->customer->name ?? '' }}</div>
