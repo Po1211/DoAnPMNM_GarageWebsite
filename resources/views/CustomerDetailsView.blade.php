@@ -26,6 +26,102 @@
     'resources/js/DichVu.js',
     ])
 
+    <style>
+        /* Modal background */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Modal content box */
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        /* Close button */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .close-btn:hover {
+            color: #e74c3c;
+        }
+
+        /* Input fields styling */
+        .modal-content input[type="text"],
+        .modal-content input[type="number"],
+        .modal-content input[type="datetime-local"],
+        .modal-content select,
+        .modal-content textarea {
+            width: 100%;
+            padding: 8px 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        /* Buttons styling */
+        .modal-content button {
+            margin-top: 10px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .modal-content button[type="submit"] {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .modal-content button[type="button"] {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .modal-content button:hover {
+            opacity: 0.9;
+        }
+
+        .btn {
+            opacity: 1 !important;
+            visibility: visible !important;
+            color: rgb(0, 0, 0);
+            display: inline-block;
+        }
+
+        /* Responsive tweaks */
+        @media screen and (max-width: 600px) {
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+
 </head>
 
 <body>
@@ -54,11 +150,16 @@
     <div id="page-overlay" class="page-overlay">
         <ul class="menu-items">
             @auth
+            @if(Auth::user()->role === 'admin')
+            <li><a href="{{ route('admin.weekly') }}">{{ Auth::user()->name }} (Admin)</a></li>
+            @else
             <li><a href="{{ route('customer.cars') }}">{{ Auth::user()->name }}</a></li>
+            @endif
             @else
             <li><a href="{{ route('signin') }}">Đăng Nhập</a></li>
             <li><a href="{{ route('signup') }}">Đăng Ký</a></li>
             @endauth
+
             <li><a href="{{ route('home') }}" class="active">Trang Chủ</a></li>
             <li><a href="{{ route('gioithieu') }}">Giới Thiệu</a></li>
 
@@ -91,86 +192,49 @@
             <div class="card profile-card">
 
                 <div class="profile-header">
-                    <div class="profile-info">
-                        <strong>Xin chào,</strong> {{ $customer->name }}
-                    </div>
-
                     <div class="logout-wrap">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="logout-btn">Đăng xuất</button>
                         </form>
                     </div>
-
-                    <div class="back-wrap">
-                        <a href="{{ route('customer.cars') }}" class="back-link">← Quay lại danh sách xe</a>
-                    </div>
+                    <a href="{{ route('customer.cars') }}" class="btn btn-secondary">← Quay lại</a>
                 </div>
             </div>
 
-            <!-- Right side -->
+
             <div class="card service-card">
-                <div class="header">
-                    <div>
-                        <h3>{{ $vehicle->vehicle_type }}</h3>
-                        <div>Biển số xe: <strong>{{ $vehicle->vehicle_plate }}</strong></div>
-                    </div>
-                    <a href="{{ route('lienhe') }}" class="book-btn">Đặt lịch dịch vụ</a>
+                <div class="card-body">
+                    <h2>Dịch vụ: {{ $appointment->service_type }}</h2>
+                    <p>Ngày giờ: {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d/m/Y H:i') }}</p>
+                    <p>Trạng thái: {{ ucfirst($appointment->status) }}</p>
+                    <p>Biển số xe: {{ $appointment->vehicle->vehicle_plate }}</p>
+                    <p>Số km: {{ $appointment->vehicle->vehicle_traveled }}</p>
+                    <p>Ghi chú: {{ $appointment->notes }}</p>
                 </div>
 
-                <div class="section-title">Lịch hẹn sắp tới</div>
-                @forelse ($upcomingAppointments as $appt)
-                <div class="schedule-card">
-                    <div class="date-box">
-                        <div>{{ \Carbon\Carbon::parse($appt->appointment_date)->format('d') }}</div>
-                        <div>{{ \Carbon\Carbon::parse($appt->appointment_date)->format('m/Y') }}</div>
-                    </div>
-                    <div class="schedule-info">
-                        <h4>{{ $appt->service_type }}</h4>
-                        <div>335 Nguyễn Khoái, Thanh Long, Hai Bà Trưng, Hà Nội</div>
-                        <div>Số km đã đi: <strong>{{ $vehicle->vehicle_traveled }}</strong></div>
-                        <div class="status">
-                            <span>🕒 {{ \Carbon\Carbon::parse($appt->appointment_date)->format('H:i') }}</span>
-                            <span class="status-green">🟢 {{ ucfirst($appt->status) }}</span>
-                            <form method="POST" action="{{ route('appointment.cancel', $appt->appointment_id) }}">
-                                @csrf
-                                <button type="submit" class="cancel-btn">Hủy Lịch</button>
-                            </form>
-                            <a href="{{ route('customer.appointment.details', $appt->appointment_id) }}" class="details-btn">Chi tiết</a>
-                        </div>
-                    </div>
-                </div>
-                @empty
-                <p style="padding-left: 16px;">Không có lịch hẹn nào.</p>
-                @endforelse
+                <!-- Update Button -->
+                <button class="showUpdateForm" data-id="{{ $appointment->appointment_id }}">Cập nhật lịch hẹn</button>
 
-                <div class="section-title">Lịch sử dịch vụ</div>
-                @forelse ($pastAppointments as $appt)
-                <div class="schedule-card">
-                    <div class="date-box">
-                        <div>{{ \Carbon\Carbon::parse($appt->appointment_date)->format('d') }}</div>
-                        <div>{{ \Carbon\Carbon::parse($appt->appointment_date)->format('m/Y') }}</div>
-                    </div>
-                    <div class="schedule-info">
-                        <h4>{{ $appt->service_type }}</h4>
-                        <div>335 Nguyễn Khoái, Thanh Long, Hai Bà Trưng, Hà Nội</div>
-                        <div>Số km đã đi: <strong>{{ $vehicle->vehicle_traveled }}</strong></div>
-                        <div class="status">
-                            <span>🕒 {{ \Carbon\Carbon::parse($appt->appointment_date)->format('H:i') }}</span>
-                            @if ($appt->status === 'completed')
-                            <span class="status-green">✔️ Hoàn thành</span>
-                            @elseif ($appt->status === 'cancelled')
-                            <span class="status-red">❌ Đã hủy</span> 
-                            @else
-                            <span>{{ ucfirst($appt->status) }}</span>
-                            @endif
-                            <a href="{{ route('customer.appointment.details', $appt->appointment_id) }}" class="details-btn">Chi tiết</a>
-                        </div>
+                <!-- The Modal Form -->
+                <div id="updateModal-{{ $appointment->appointment_id }}" class="modal">
+                    <div class="modal-content">
+                        <span class="close-btn" data-id="{{ $appointment->appointment_id }}">&times;</span>
+                        <h3>Cập nhật lịch hẹn</h3>
+                        <form method="POST" action="{{ route('customer.appointment.update', $appointment->appointment_id) }}">
+                            @csrf
+                            <label>Dịch vụ</label>
+                            <input type="text" name="service_type" value="{{ $appointment->service_type }}" required>
+                            <label>Ngày giờ</label>
+                            <input type="datetime-local" name="appointment_date" value="{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d\TH:i') }}" required>
+                            <label>Số km đã đi</label>
+                            <input type="number" name="vehicle_traveled" value="{{ $appointment->vehicle->vehicle_traveled }}">
+                            <label>Ghi chú</label>
+                            <textarea name="notes">{{ $appointment->notes }}</textarea>
+                            <button type="submit">Lưu thay đổi</button>
+                        </form>
                     </div>
                 </div>
-                @empty
-                <p style="padding-left: 16px;">Không có lịch sử dịch vụ.</p>
-                @endforelse
             </div>
         </div>
     </section>
@@ -251,6 +315,30 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+        document.querySelectorAll('.showUpdateForm').forEach(button => {
+            button.addEventListener('click', function() {
+                let id = this.dataset.id;
+                document.getElementById(`updateModal-${id}`).style.display = "flex";
+            });
+        });
+
+        document.querySelectorAll('.close-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                let id = this.dataset.id;
+                document.getElementById(`updateModal-${id}`).style.display = "none";
+            });
+        });
+
+        window.onclick = function(event) {
+            document.querySelectorAll('.modal').forEach(modal => {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            });
+        };
+    </script>
 
 </body>
 

@@ -86,4 +86,52 @@ class CustomerController extends Controller
 
         return back()->with('message', 'Lịch hẹn đã được hủy.');
     }
+
+    public function showAppointmentDetails($id)
+    {
+        $user = Auth::user();
+        $customer = Customer::where('email', $user->email)->firstOrFail();
+
+        $appointment = Appointment::with('vehicle.customer')
+            ->where('appointment_id', $id)
+            ->whereHas('vehicle', function ($query) use ($customer) {
+                $query->where('customer_id', $customer->customer_id);
+            })
+            ->firstOrFail();
+
+        return view('CustomerDetailsView', [
+            'appointment' => $appointment,
+            'customer' => $customer,
+        ]);
+    }
+
+    public function updateAppointment(Request $request, $id)
+    {
+        $appointment = Appointment::with('vehicle.customer')->findOrFail($id);
+
+        // Check that the appointment belongs to the logged-in customer
+        if ($appointment->vehicle->customer->email !== Auth::user()->email) {
+            abort(403, 'Unauthorized');
+        }
+
+        $data = $request->validate([
+            'service_type' => 'required|string|max:255',
+            'appointment_date' => 'required|date',
+            'vehicle_traveled' => 'nullable|integer',
+            'notes' => 'nullable|string',
+        ]);
+
+        // Update fields
+        $appointment->update([
+            'service_type' => $data['service_type'],
+            'appointment_date' => $data['appointment_date'],
+            'notes' => $data['notes'] ?? $appointment->notes,
+        ]);
+
+        // Update vehicle km
+        $appointment->vehicle->vehicle_traveled = $data['vehicle_traveled'] ?? $appointment->vehicle->vehicle_traveled;
+        $appointment->vehicle->save();
+
+        return back()->with('message', 'Cập nhật lịch hẹn thành công!');
+    }
 }

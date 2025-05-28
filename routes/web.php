@@ -8,9 +8,13 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\AdminController;
 
+Route::post('/customer/appointment/update/{id}', [CustomerController::class, 'updateAppointment'])->name('customer.appointment.update');
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/weekly', [AdminController::class, 'weeklyAppointments'])->name('admin.weekly');
 });
+Route::get('/customer/appointment/{id}', [CustomerController::class, 'showAppointmentDetails'])
+    ->name('customer.appointment.details')
+    ->middleware(['auth']);
 Route::get('/admin/search-appointments', [AdminController::class, 'searchAppointments'])->name('admin.searchAppointments')->middleware(['auth', 'admin']);
 
 Route::get('/admin/appointment/{id}', [AdminController::class, 'showAppointment'])
