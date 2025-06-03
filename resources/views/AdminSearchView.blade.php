@@ -34,6 +34,25 @@
             color: rgb(0, 0, 0);
             display: inline-block;
         }
+
+        .inline-form {
+            display: inline;
+        }
+
+        .cancel-btn {
+            background-color: #dc3545;
+            /* Red */
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .cancel-btn:hover {
+            background-color: #c82333;
+        }
     </style>
 
 </head>
@@ -141,17 +160,27 @@
                             <th>Ngày hẹn</th>
                             <th>Trạng thái</th>
                             <th>Chi tiết</th>
+                            <th>Huỷ lịch</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($appointments as $appt)
+                        @foreach($appointments->where('status', 'pending') as $appt)
                         <tr>
                             <td>{{ $appt->vehicle->customer->name ?? 'N/A' }}</td>
                             <td>{{ $appt->vehicle->vehicle_plate ?? 'N/A' }}</td>
                             <td>{{ $appt->service_type }}</td>
                             <td>{{ \Carbon\Carbon::parse($appt->appointment_date)->format('d/m/Y H:i') }}</td>
-                            <td>{{ $appt->status }}</td>
-                            <td><a href="{{ route('admin.appointment.show', $appt->appointment_id) }}">Xem</a></td>
+                            <td style="color: green;">{{ ucfirst($appt->status) }}</td>
+                            <td>
+                                <a href="{{ route('admin.appointment.show', $appt->appointment_id) }}" style="color: blue;">Xem</a>
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ route('admin.appointment.cancel', $appt->appointment_id) }}" style="display:inline;">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" style="background-color:red; color:white; padding:5px 10px; border:none; border-radius:4px;">Huỷ</button>
+                                </form>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -159,6 +188,7 @@
                 @elseif(isset($appointments))
                 <p>Không tìm thấy kết quả phù hợp.</p>
                 @endif
+
             </div>
         </div>
     </section>

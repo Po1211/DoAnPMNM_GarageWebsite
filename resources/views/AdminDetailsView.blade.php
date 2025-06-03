@@ -114,7 +114,22 @@
             display: inline-block;
         }
 
-        /* Responsive tweaks */
+        #showUpdateForm {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        #showUpdateForm:hover {
+            background-color: #0056b3;
+        }
+
         @media screen and (max-width: 600px) {
             .modal-content {
                 width: 95%;

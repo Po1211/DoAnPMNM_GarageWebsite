@@ -114,6 +114,35 @@
             display: inline-block;
         }
 
+        /* Update button styling */
+        .update-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #007bff;
+            /* Blue background */
+            color: white;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .update-btn:hover {
+            background-color: #0056b3;
+            /* Darker blue on hover */
+            transform: translateY(-1px);
+            /* Slight lift */
+        }
+
+        .update-btn:active {
+            background-color: #004085;
+            /* Even darker on click */
+            transform: scale(0.98);
+        }
+
+
         /* Responsive tweaks */
         @media screen and (max-width: 600px) {
             .modal-content {
@@ -214,27 +243,28 @@
                 </div>
 
                 <!-- Update Button -->
-                <button class="showUpdateForm" data-id="{{ $appointment->appointment_id }}">Cập nhật lịch hẹn</button>
+                <button class="update-btn showUpdateForm" data-id="{{ $appointment->appointment_id }}">Cập nhật lịch hẹn</button>
 
-                <!-- The Modal Form -->
-                <div id="updateModal-{{ $appointment->appointment_id }}" class="modal">
-                    <div class="modal-content">
-                        <span class="close-btn" data-id="{{ $appointment->appointment_id }}">&times;</span>
-                        <h3>Cập nhật lịch hẹn</h3>
-                        <form method="POST" action="{{ route('customer.appointment.update', $appointment->appointment_id) }}">
-                            @csrf
-                            <label>Dịch vụ</label>
-                            <input type="text" name="service_type" value="{{ $appointment->service_type }}" required>
-                            <label>Ngày giờ</label>
-                            <input type="datetime-local" name="appointment_date" value="{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d\TH:i') }}" required>
-                            <label>Số km đã đi</label>
-                            <input type="number" name="vehicle_traveled" value="{{ $appointment->vehicle->vehicle_traveled }}">
-                            <label>Ghi chú</label>
-                            <textarea name="notes">{{ $appointment->notes }}</textarea>
-                            <button type="submit">Lưu thay đổi</button>
-                        </form>
+
+                    <!-- The Modal Form -->
+                    <div id="updateModal-{{ $appointment->appointment_id }}" class="modal">
+                        <div class="modal-content">
+                            <span class="close-btn" data-id="{{ $appointment->appointment_id }}">&times;</span>
+                            <h3>Cập nhật lịch hẹn</h3>
+                            <form method="POST" action="{{ route('customer.appointment.update', $appointment->appointment_id) }}">
+                                @csrf
+                                <label>Dịch vụ</label>
+                                <input type="text" name="service_type" value="{{ $appointment->service_type }}" required>
+                                <label>Ngày giờ</label>
+                                <input type="datetime-local" name="appointment_date" value="{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d\TH:i') }}" required>
+                                <label>Số km đã đi</label>
+                                <input type="number" name="vehicle_traveled" value="{{ $appointment->vehicle->vehicle_traveled }}">
+                                <label>Ghi chú</label>
+                                <textarea name="notes">{{ $appointment->notes }}</textarea>
+                                <button type="submit">Lưu thay đổi</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
             </div>
         </div>
     </section>

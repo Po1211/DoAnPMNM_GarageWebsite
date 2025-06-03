@@ -100,4 +100,13 @@ class AdminController extends Controller
             'user' => Auth::user(),
         ]);
     }
+
+    public function cancelAppointment($id)
+    {
+        $appointment = Appointment::findOrFail($id);
+        $appointment->status = 'cancelled';
+        $appointment->save();
+
+        return back()->with('message', 'Lịch hẹn đã được hủy.');
+    }
 }

@@ -21,6 +21,24 @@ Route::get('/admin/appointment/{id}', [AdminController::class, 'showAppointment'
     ->name('admin.appointment.show')
     ->middleware(['auth', 'admin']);
 
+Route::patch('/admin/appointment/{id}/cancel', [AdminController::class, 'cancelAppointment'])
+    ->middleware(['auth', 'admin'])
+    ->name('admin.appointment.cancel');
+
+
+Route::post('/admin/appointment/{id}/update', [AdminController::class, 'updateAppointment'])
+    ->name('admin.appointment.update')
+    ->middleware(['auth', 'admin']);
+
+Route::get('/customer/appointment/{id}', [CustomerController::class, 'showAppointmentDetails'])
+    ->name('customer.appointment.details')
+    ->middleware(['auth']);
+Route::get('/admin/search-appointments', [AdminController::class, 'searchAppointments'])->name('admin.searchAppointments')->middleware(['auth', 'admin']);
+
+Route::get('/admin/appointment/{id}', [AdminController::class, 'showAppointment'])
+    ->name('admin.appointment.show')
+    ->middleware(['auth', 'admin']);
+
 Route::post('/admin/appointment/{id}/update', [AdminController::class, 'updateAppointment'])
     ->name('admin.appointment.update')
     ->middleware(['auth', 'admin']);
@@ -53,4 +71,3 @@ Route::view('/sign-in', 'SignIn')->name('signin');
 Route::view('/sign-up', 'SignUp')->name('signup');
 Route::view('/lich-su-xe', 'CustomerCarsView')->name('cview');
 Route::view('/lich-su-cuoc-hen', 'CustomerHistory   View')->name('hview');
-

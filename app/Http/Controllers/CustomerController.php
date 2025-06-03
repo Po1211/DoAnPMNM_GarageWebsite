@@ -98,12 +98,23 @@ class CustomerController extends Controller
                 $query->where('customer_id', $customer->customer_id);
             })
             ->firstOrFail();
+            
+        $date = \Carbon\Carbon::parse($appointment->appointment_date)->toDateString();
+
+        $bookedAppointments = Appointment::whereDate('appointment_date', $date)
+            ->where('appointment_id', '!=', $appointment->appointment_id)
+            ->pluck('appointment_date')
+            ->map(function ($datetime) {
+                return \Carbon\Carbon::parse($datetime)->format('H:i');
+            })->toArray();
 
         return view('CustomerDetailsView', [
             'appointment' => $appointment,
             'customer' => $customer,
+            'bookedSlots' => $bookedAppointments, 
         ]);
     }
+
 
     public function updateAppointment(Request $request, $id)
     {
